@@ -1,0 +1,27 @@
+#!/bin/bash
+# chkconfig: 345 99 01
+# description: pure-ftpd init script
+
+. /etc/profile
+
+case $1 in
+start)
+
+/usr/sbin/pure-ftpd &
+echo "pure-ftpd started"
+;;
+stop)
+
+echo "pure-ftpd stopped"	
+pkill pure-ftpd
+;;
+restart)
+$0 stop
+sleep 5;
+$0 start
+;;
+*)
+echo "Usage $0 start|stop|restart"
+esac
+exit 0
+
