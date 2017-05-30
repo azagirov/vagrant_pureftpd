@@ -15,7 +15,7 @@ echo "pure-ftpd started"
 stop)
 
 echo "pure-ftpd stopped"	
-kill $(cat "$PIDFILE") && rm -f "$PIDFILE"
+kill $(cat "$PIDFILE") &> /dev/null && rm -f "$PIDFILE" &> /dev/null
 ;;
 restart)
 $0 stop
