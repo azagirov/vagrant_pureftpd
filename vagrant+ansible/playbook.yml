@@ -52,3 +52,10 @@
       name: /home/vagrant/rpmbuild/RPMS/x86_64/pure-ftpd-1.0.46-1.x86_64.rpm
     become: true
 
+
+  - name: start and enable pure-ftpd
+    service:
+      name: pure-ftpd
+      state: started
+      enabled: yes
+    become: true
