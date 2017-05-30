@@ -1,0 +1,54 @@
+- hosts: all
+  tasks:
+
+  - name: install packages
+    yum: pkg={{item}} state=latest
+    with_items:
+         - rpm-build
+         - gcc
+    become: true       
+
+  - name: create directories
+    file: 
+      path: /home/vagrant/rpmbuild/{{item}} 
+      owner: vagrant
+      group: vagrant
+      state: directory 
+      recurse: yes
+    with_items:
+         - BUILD
+         - BUILDROOT
+         - RPMS
+         - SOURCES
+         - SPECS
+         - SRPMS
+
+  - name: download spec file from github
+    get_url:
+      url: https://raw.githubusercontent.com/azagirov/vagrant_pureftpd/master/rpmbuild/pure-ftpd.spec
+      dest: /home/vagrant/rpmbuild
+      owner: vagrant
+      group: vagrant
+
+  - name: download init script from github
+    get_url:
+      url: https://raw.githubusercontent.com/azagirov/vagrant_pureftpd/master/rpmbuild/SOURCES/pure-ftpd
+      dest: /home/vagrant/rpmbuild/SOURCES
+      owner: vagrant
+      group: vagrant
+
+  - name: download pure-ftpd
+    get_url: 
+      url: ftp://ftp.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.46.tar.gz
+      dest: /home/vagrant/rpmbuild/SOURCES
+      owner: vagrant
+      group: vagrant
+
+  - name: run rpmbuild
+    shell: rpmbuild -bb /home/vagrant/rpmbuild/pure-ftpd.spec
+
+  - name: install pure-ftpd
+    yum:
+      name: /home/vagrant/rpmbuild/RPMS/x86_64/pure-ftpd-1.0.46-1.x86_64.rpm
+    become: true
+

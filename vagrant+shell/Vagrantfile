@@ -1,0 +1,13 @@
+$script = <<SCRIPT
+yum install -y rpm-build gcc
+su -c "mkdir -p /home/vagrant/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS} && wget -P /home/vagrant/rpmbuild https://raw.githubusercontent.com/azagirov/vagrant_pureftpd/master/rpmbuild/pure-ftpd.spec && wget -P /home/vagrant/rpmbuild/SOURCES https://raw.githubusercontent.com/azagirov/vagrant_pureftpd/master/rpmbuild/SOURCES/pure-ftpd ftp://ftp.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.46.tar.gz && rpmbuild -bb /home/vagrant/rpmbuild/pure-ftpd.spec" vagrant
+cd /home/vagrant/rpmbuild/RPMS/x86_64 && rpm -i pure-ftpd-1.0.46-1.x86_64.rpm
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos6.9"
+  config.vm.box_url = "http://cloud.centos.org/centos/6/vagrant/x86_64/images/CentOS-6-x86_64-Vagrant-1704_01.VirtualBox.box"
+  config.vm.network "public_network"
+  config.vm.provision "shell", inline: $script 
+end
+

@@ -1,0 +1,8 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos6.9"
+  config.vm.box_url = "http://cloud.centos.org/centos/6/vagrant/x86_64/images/CentOS-6-x86_64-Vagrant-1704_01.VirtualBox.box"
+  config.vm.network "public_network"
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
+end
